@@ -3,147 +3,479 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Snap-on 小小知識王</title>
-  <!-- SheetJS：用來輸出 Excel -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <title>Car-O-Liner 小小知識王</title>
+
   <style>
-    :root{ --w: min(920px, 94vw); }
-    html, body { height: 100%; }
-    body{
-      margin:0; font-family: system-ui, -apple-system, "Noto Sans TC", Segoe UI, Roboto, Arial, "Helvetica Neue", Helvetica, "微軟正黑體", sans-serif;
-      color:#e5e7eb;
-      background: #0f172a url('assets/BackGround.png') center/cover no-repeat fixed;
+    :root{
+      --w: min(920px, 94vw);
     }
-    /* 背景遮罩，讓文字更清楚 */
-    body::before{ content:""; position:fixed; inset:0; background: rgba(0,0,0,.45); z-index:-1; }
 
-    header{ max-width:var(--w); margin:30px auto 10px; padding:0 8px; }
-    h1{ margin:0; font-size: clamp(24px, 5vw, 38px); letter-spacing:.5px; }
-    p.sub{ margin:6px 0 0; color:#cbd5e1; }
+    html, body { height: 100%; }
 
-    main{ max-width:var(--w); margin: 10px auto 60px; padding:16px; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Noto Sans TC", Segoe UI, Roboto, Arial, "Helvetica Neue", Helvetica, "微軟正黑體", sans-serif;
+      color:#e5e7eb;
+      /* 預設第一題背景，之後用 JS 依題目覆蓋 background-image */
+      background: #0f172a url('assets/01.jpeg') center 62% / 75% no-repeat fixed;
+    }
 
-    .card{ background:#0b1220cc; border:1px solid #1f2937; border-radius:18px; padding:18px; margin:14px 0; box-shadow:0 10px 30px rgba(0,0,0,.25); }
-    .meta{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; color:#cbd5e1; font-size:14px; }
-    .pill{ background:#111827cc; padding:6px 12px; border-radius:999px; border:1px solid #334155; }
+    header{
+      width: min(45vw, var(--w));
+      margin:60px 0 10px auto;
+      padding:0 8px;
+    }
+    header > *{
+      max-width:90%;
+      margin-left:auto;
+    }
 
-    .q{ font-weight:800; font-size:20px; margin:6px 0 12px; }
-    .choices{ display:grid; grid-template-columns:1fr; gap:12px; }
-    .choices button{ text-align:left; border:1px solid #334155; background:#0f172a; color:#e5e7eb; padding:12px 14px; border-radius:12px; cursor:pointer; transition: transform .02s ease-in, border-color .15s ease; }
-    .choices button:hover{ transform: translateY(-1px); border-color:#60a5fa; }
-    .choices button.selected{ border-color:#60a5fa; box-shadow:0 0 0 3px rgba(96,165,250,.25) inset; }
+    /* 標題：黑色 */
+    h1{
+      margin:0;
+      font-size: clamp(24px, 5vw, 38px);
+      letter-spacing:.5px;
+      color:#000000;
+    }
 
-    .controls{ display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:14px; }
-    .btn{ background:#2563eb; color:white; border:none; padding:12px 16px; border-radius:12px; cursor:pointer; font-weight:700; }
-    .btn.ghost{ background:transparent; border:1px solid #334155; color:#e5e7eb; }
-    .btn.warn{ background:#991b1b; }
+    /* 副標題：黑色 */
+    p.sub{
+      margin:6px 0 0;
+      color:#000000;
+    }
 
-    .result{ padding:16px; border-radius:12px; background:#052e16; border:1px solid #14532d; color:#bbf7d0; }
-    .small{ font-size:12px; color:#94a3b8; }
+    main{
+      width: min(45vw, var(--w));
+      margin:10px 20vw 60px auto;
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      align-items:flex-end;
+    }
 
-    form label{ display:block; font-weight:700; margin: 10px 0 6px; }
-    input[type="text"], input[type="email"]{ width:100%; padding:10px 12px; border-radius:10px; border:1px solid #334155; background:#0b1220; color:#e5e7eb; }
-    .grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
-    @media (max-width:720px){ .grid{ grid-template-columns:1fr; } }
+    /* 題目卡片寬度固定 28vw */
+    .card{
+      background:#0b1220cc;
+      border:1px solid #1f2937;
+      border-radius:18px;
+      padding:18px;
+      margin:14px 0;
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
+      width:28vw;
+      box-sizing:border-box;
+    }
 
-    footer{ max-width:var(--w); margin: 0 auto 30px; padding:0 8px; color:#cbd5e1; font-size:12px; }
-    .corner-gif{ position:fixed; top:12px; left:12px; width:96px; z-index:10; pointer-events:none; border-radius:12px; }
-</style>
+    .q{
+      font-weight:800;
+      font-size:20px;
+      margin:6px 0 12px;
+    }
+
+    /* 題目前敘述：紅色 #913533 */
+    .section-title{
+      font-size:18px;
+      font-weight:800;
+      color:#913533;
+      margin-bottom:4px;
+    }
+
+    .choices{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+    .choices button{
+      text-align:left;
+      border:1px solid #334155;
+      background:#0f172a;
+      color:#e5e7eb;
+      padding:12px 14px;
+      border-radius:12px;
+      cursor:pointer;
+      transition: transform .02s ease-in, border-color .15s ease, box-shadow .15s ease;
+    }
+
+    /* 滑鼠移上/點選：紅色框 */
+    .choices button:hover{
+      transform: translateY(-1px);
+      border-color:#ef4444;
+    }
+    .choices button.selected{
+      border-color:#ef4444;
+      box-shadow:0 0 0 3px rgba(239,68,68,.35) inset;
+    }
+
+    #explain{
+      margin-top:8px;
+      align-self:flex-end;
+    }
+
+    .explain-card{
+      background:#111827cc;
+      border:1px solid #1f2937;
+      border-radius:12px;
+      padding:12px 14px;
+      font-size:14px;
+      width:28vw;
+      box-sizing:border-box;
+    }
+
+    .controls{
+      margin-top:14px;
+      width:90%;
+      height:40px;
+    }
+
+    .btn{
+      background:#2563eb;
+      color:white;
+      border:none;
+      padding:12px 16px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:700;
+    }
+
+    /* 下一題 / 交卷 固定在右側 30vw、下側 2vw */
+    #next,
+    #finish{
+      position:fixed;
+      right:30vw;
+      bottom:2vw;
+      z-index:20;
+    }
+
+    footer{
+      width: min(45vw, var(--w));
+      margin:0 0 30px auto;
+      padding:0 8px;
+      color:#cbd5e1;
+      font-size:12px;
+    }
+
+    /* 成績彈跳視窗（置中） */
+    #resultOverlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.65);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:60;
+    }
+    #resultModal{
+      background:#020617f0;
+      border-radius:18px;
+      padding:24px 28px;
+      max-width:320px;
+      width:80%;
+      text-align:center;
+      border:1px solid #e5e7eb33;
+      box-shadow:0 20px 40px rgba(0,0,0,.6);
+    }
+    #resultModal h2{
+      margin:0 0 10px;
+      font-size:20px;
+    }
+    #resultModal p{
+      margin:4px 0;
+      font-size:16px;
+    }
+
+    @media (max-width: 640px){
+      header{
+        width: var(--w);
+        margin:40px auto 10px;
+      }
+      header > *{
+        max-width:100%;
+        margin-left:0;
+      }
+
+      main, footer{
+        width: var(--w);
+        margin-left:auto;
+        margin-right:auto;
+      }
+
+      main{
+        align-items:stretch;
+      }
+      .card{
+        width:100%;
+      }
+      .explain-card{
+        width:100%;
+      }
+
+      #next,
+      #finish{
+        position:static;
+        margin-top:8px;
+      }
+      .controls{
+        height:auto;
+      }
+      #resultModal{
+        width:92%;
+      }
+    }
+  </style>
 </head>
 <body>
-  <img class="corner-gif" src="assets/Snap Spark Sticker by Snap-on Tools.gif" alt="Snap-on spark sticker" />
+  <!-- 左上角 GIF 已移除 -->
+
   <header>
-    <h1>Snap-on 小小知識王</h1>
-    <p class="sub">測試看看你對Snap-on工具的了解程度</p>
+    <h1>Car-O-Liner 小小知識王</h1>
+    <p class="sub">測試看看你對 Car-O-Liner 的了解程度!</p>
   </header>
 
   <main>
-    <div class="meta card" id="hud">
-      <span id="progress" class="pill">第 1/6 題</span>
-      <span id="score" class="pill">得分：0</span>
-      <span id="timer" class="pill">00:00</span>
-    </div>
-
     <div id="quiz"></div>
+    <div id="explain"></div>
 
     <div class="controls">
-      <button id="prev" class="btn ghost" disabled>上一題</button>
-      <div style="flex:1"></div>
       <button id="next" class="btn">下一題</button>
       <button id="finish" class="btn" style="display:none">交卷</button>
     </div>
 
-    <div id="summary" style="margin-top:16px"></div>
+    <div id="summary"></div>
   </main>
 
-  <footer>
-    <p class="small">自訂：在 <code>const QUESTIONS = [
-  { q:'Snap-on 常見的「Level 5 ATC 系統」主要功能是什麼?', options:['自動化工具控管與追蹤','工具自動校正精度','自動平衡輪胎','自動辨識車輛故障碼'], answer:0, explain:'Level 5 ATC（Asset Tracking & Control）可對工具資產進行授權、追蹤與紀錄，提高管理效率與防遺失。' },
-  { q:'Snap-on 的套筒內部常見的「Flank Drive」設計主要作用是?', options:['避免螺絲滑牙','增加亮面裝飾效果','減輕套筒重量','防止套筒生鏽'], answer:0, explain:'Flank Drive 以接觸螺帽側壁而非尖角，降低滑牙風險、提升扭力傳遞。' },
-  { q:'Snap-on 的工具為什麼大多採用鍍鉻處理?', options:['防鏽與易清潔','讓重量更輕','提升導電性','減少生產成本'], answer:0, explain:'鉻鍍層可抗腐蝕、表面平滑易於清潔，延長工具壽命與專業外觀。' },
-  { q:'Snap-on 的衝擊套筒與普通套筒最大差異是?', options:['採用耐衝擊鋼材與厚壁設計','全部採亮面塗裝','僅能單次使用','不可用於氣動工具'], answer:0, explain:'衝擊套筒使用衝擊級鋼材、壁厚較厚以吸收衝擊力，適合搭配氣動/電動衝擊工具。' },
-  { q:'Snap-on 的棘輪扳手特色之一是?', options:['齒數多、角度細小，旋轉更精準','僅能單向使用','全部無鍍層','需經過校正才能使用'], answer:0, explain:'高齒數帶來較小的最小擺角（swing arc），在狹小空間更好操作。' },
-  { q:'Snap-on 旗下的 Bahco 品牌最廣為人知的代表產品是什麼?', options:['活動扳手','銼刀','鋸片','鉗子'], answer:0, explain:'Bahco 以活動扳手（Adjustable Wrench）最廣為人知。' },
-];</code> 改題庫；把你的背景動圖放在 <code>assets/BackGround.png</code>，或改成 <code>jpg/mp4</code> 皆可。</p>
-  </footer>
+  <footer></footer>
+
+  <!-- 成績彈跳視窗 -->
+  <div id="resultOverlay">
+    <div id="resultModal"></div>
+  </div>
 
 <script>
 /********************
- * 1) 題庫（四選項 × 6 題）
+ * 題庫（第 1 題改為 Car-O-Liner）
  ********************/
 const QUESTIONS = [
-  { q:'GitHub Pages 主要用途是？', options:['部署靜態網站','當資料庫用','寄發電子報','執行雲端函式'], answer:0, explain:'Pages 會把 HTML/CSS/JS 公開成網站。' },
-  { q:'下列何者不是 Git 基本動作？', options:['commit','push','pull','compile'], answer:3, explain:'compile 是編譯，Git 動作不是它。' },
-  { q:'建立新分支常用指令？', options:['git branch 新分支名','git make branch','git split','git new'], answer:0, explain:'git branch feature-x。' },
-  { q:'README.md 通常使用哪種語法？', options:['Markdown','LaTeX','CSV','SQL'], answer:0, explain:'README 預設採 Markdown。' },
-  { q:'想把程式變更上傳到遠端，需使用？', options:['git push','git add remote','git upload','git send'], answer:0, explain:'本地 commit 後用 git push。' },
-  { q:'Issues 適合用來？', options:['追蹤問題/需求','佈署靜態網站','儲存二進位檔','執行排程器'], answer:0, explain:'Issues=協作追蹤問題/任務。' },
+  {
+    q:'Car-O-Liner 創立於哪一年？',
+    options:[
+      '1963 年',
+      '1973 年',
+      '1983 年',
+      '1993 年'
+    ],
+    answer:1,
+    explain:'💡 解析：Car-O-Liner 於 1973 年在瑞典創立，並以車身校正平台與測量系統聞名全球。'
+  },
+  {
+    q:'John Bean 品牌於車輪定位技術中最具代表性的技術之一「3D 影像定位系統」是與哪家公司合作所致？',
+    options:[
+      'Bosch',
+      'Snap-on',
+      'Toyota',
+      'Siemens'
+    ],
+    answer:1,
+    explain:'💡 解析：John Bean 與 Snap-on 合作，將機械定位與 3D 影像技術結合，形成全新維修方案，成為業界標準。'
+  },
+  {
+    q:'下列哪項技術是 John Bean 影像定位的創新里程碑？',
+    options:[
+      'Prism 無線影像定位系統',
+      'UltraScan Pro 光譜測距',
+      'LaserLine Smart Aligner',
+      'Twin-Cam V-Align System'
+    ],
+    answer:0,
+    explain:'💡 解析：Prism 系統讓定位更靈活、快速，無需傳輸線與固定結構，是維修效率的代表性技術。'
+  },
+  {
+    q:'John Bean 的 Tru-Point™ 系統主要用於哪一項應用？',
+    options:[
+      '輪胎氣壓偵測',
+      '車身烤漆溫度控制',
+      'ADAS 先進駕駛輔助系統校正',
+      '冷媒壓縮比測試'
+    ],
+    answer:2,
+    explain:'解析：Tru-Point™ 可自動校正攝影機、雷達與感測器，讓定位與安全輔助系統同步一致。'
+  },
+  {
+    q:'John Bean 為何與 WorldSkills International 建立合作夥伴關係？',
+    options:[
+      '推廣零售銷售',
+      '支援全球青年技能競賽，提供定位與 ADAS 設備',
+      '協助舉辦汽車設計比賽',
+      '供應活動舞台搭建'
+    ],
+    answer:1,
+    explain:'💡 解析：自 2023 年起，John Bean 成為 WorldSkills 全球產業夥伴，協助培育新世代維修技術人才。'
+  },
+  {
+    q:'John Bean 最新推出的 V4400 Commander 定位機具備下列哪些主要功能？',
+    options:[
+      '採用 XD 高解析相機與 3D 即時影像追蹤',
+      '無靶標（Targetless）設計與 Drive-Through 連續量測功能',
+      '整合 ADAS 校正與 Audit Mode 維修報告匯出系統',
+      '以上皆是'
+    ],
+    answer:3,
+    explain:'💡 解析：V4400 Commander 為 John Bean 最新旗艦 wheel aligner，結合 XD 相機與 3D 即時影像追蹤、無靶標設計、Drive-Through 功能與 ADAS 校正支援，讓定位作業更快速精準。'
+  },
+  {
+    q:'在被 Snap-on 收購之前，John Bean 的汽車維修設備部門曾隸屬於哪家公司？',
+    options:[
+      'FMC Corporation（Food Machinery & Chemical）',
+      'General Motors',
+      'Bosch Technology Group',
+      'Siemens AG'
+    ],
+    answer:0,
+    explain:'💡 解析：John Bean 的前身為 Bean Spray Pump，後併入 FMC Corporation，其汽車維修設備部門於 1996 年被 Snap-on 收購。'
+  },
+  {
+    q:'John Bean 影像定位系統的發展方向，最重視哪個核心目標？',
+    options:[
+      '視覺化、快速化、精準化',
+      '低成本、簡化功能',
+      '擴充娛樂功能',
+      '專注豪華車改裝'
+    ],
+    answer:0,
+    explain:'💡 解析：從 Visualiner 到 3D 系統，John Bean 致力於讓定位過程更直觀、更高速且更精準。'
+  },
+  {
+    q:'John Bean 成為 WorldSkills International 全球產業夥伴，其目的之一為何？',
+    options:[
+      '提供比賽用輪胎免費配給',
+      '為汽車技術競賽提供輪定位與校正設備',
+      '贊助參賽者旅遊觀光',
+      '提供比賽用餐點與會場裝潢'
+    ],
+    answer:1,
+    explain:'💡 解析：John Bean 在 WorldSkills 中的角色為汽車技術領域設備合作夥伴，提供專業裝備以支持青年技能人才競賽。'
+  },
+  {
+    q:'下列哪一句最能代表 John Bean 的品牌核心？',
+    options:[
+      '速度勝於一切',
+      '精準 × 創新 × 可靠',
+      '修車變簡單',
+      '每個螺絲都值得敬重'
+    ],
+    answer:1,
+    explain:'💡 解析：John Bean 以精準測量、創新科技與可靠品質聞名全球，是專業維修設備的代名詞。'
+  }
 ];
 
 /********************
- * 2) 狀態與設定
+ * 每題對應的背景圖
+ * index：0–9 對應第 1–10 題
  ********************/
+const BG_MAP = {
+  0: 'assets/01.jpeg',
+  1: 'assets/02.jpeg',
+  2: 'assets/03.jpeg',
+  3: 'assets/04.jpeg',
+  4: 'assets/05.jpeg',
+  5: 'assets/06.jpeg',
+  6: 'assets/07.jpeg',
+  7: 'assets/08.jpeg',
+  8: 'assets/09.jpeg',
+  9: 'assets/10.jpeg'
+};
+
 let state = {
   idx: 0,
   score: 0,
-  selected: {}, // 單選：number
+  selected: {},
   startAt: Date.now(),
   finished: false,
+  explainShown: {}
 };
-const POINTS_PER_Q = 1; // 每題配分
 
-/********************
- * 3) 工具函式
- ********************/
-const $ = (s)=>document.querySelector(s);
-const quizEl = $('#quiz');
-const progressEl = $('#progress');
-const scoreEl = $('#score');
-const timerEl = $('#timer');
-const prevBtn = $('#prev');
-const nextBtn = $('#next');
-const finishBtn = $('#finish');
-const summaryEl = $('#summary');
+const POINTS_PER_Q = 1;
 
-function formatTime(sec){
-  const m = Math.floor(sec/60).toString().padStart(2,'0');
-  const s = Math.floor(sec%60).toString().padStart(2,'0');
-  return `${m}:${s}`;
-}
+const $  = (s)=>document.querySelector(s);
+const quizEl       = $('#quiz');
+const explainEl    = $('#explain');
+const nextBtn      = $('#next');
+const finishBtn    = $('#finish');
+const summaryEl    = $('#summary');
+const overlayEl    = $('#resultOverlay');
+const resultModal  = $('#resultModal');
 
 function render(){
   const total = QUESTIONS.length;
-  progressEl.textContent = `第 ${state.idx+1}/${total} 題`;
-  scoreEl.textContent = `得分：${state.score}`;
-  prevBtn.disabled = state.idx === 0;
-  nextBtn.style.display = state.idx < total-1 ? 'inline-block' : 'none';
-  finishBtn.style.display = state.idx === total-1 ? 'inline-block' : 'none';
+
+  nextBtn.style.display  = state.idx < total-1 ? 'inline-block' : 'none';
+  finishBtn.style.display= state.idx === total-1 ? 'inline-block' : 'none';
 
   const q = QUESTIONS[state.idx];
   quizEl.innerHTML = '';
+  explainEl.innerHTML = '';
 
   const card = document.createElement('div');
   card.className = 'card';
+
+  if (state.idx === 0){
+    const t = document.createElement('div');
+    t.className = 'section-title';
+    t.textContent = '1️⃣ 品牌起源';
+    card.appendChild(t);
+  }
+  if (state.idx === 1){
+    const t = document.createElement('div');
+    t.className = 'section-title';
+    t.textContent = '2️⃣ 3D 影像定位夥伴';
+    card.appendChild(t);
+  }
+  if (state.idx === 2){
+    const t = document.createElement('div');
+    t.className = 'section-title';
+    t.textContent = '3️⃣ Prism 無線影像定位';
+    card.appendChild(t);
+  }
+  if (state.idx === 3){
+    const t = document.createElement('div');
+    t.className = 'section-title';
+    t.textContent = '4️⃣ 智慧校正代表作';
+    card.appendChild(t);
+  }
+  if (state.idx === 4){
+    const t = document.createElement('div');
+    t.className = 'section-title';
+    t.textContent = '5️⃣ WorldSkills 全球合作';
+    card.appendChild(t);
+  }
+  if (state.idx === 5){
+    const t = document.createElement('div');
+    t.className = 'section-title';
+    t.textContent = '6️⃣ V4400 最新款定位機';
+    card.appendChild(t);
+  }
+  if (state.idx === 6){
+    const t = document.createElement('div');
+    t.className = 'section-title';
+    t.textContent = '7️⃣ 品牌歷史傳承';
+    card.appendChild(t);
+  }
+  if (state.idx === 7){
+    const t = document.createElement('div');
+    t.className = 'section-title';
+    t.textContent = '8️⃣ 光學影像演進';
+    card.appendChild(t);
+  }
+  if (state.idx === 8){
+    const t = document.createElement('div');
+    t.className = 'section-title';
+    t.textContent = '9️⃣ 技術教育貢獻';
+    card.appendChild(t);
+  }
+  if (state.idx === 9){
+    const t = document.createElement('div');
+    t.className = 'section-title';
+    t.textContent = '🔟 品牌精神';
+    card.appendChild(t);
+  }
 
   const qEl = document.createElement('div');
   qEl.className = 'q';
@@ -153,14 +485,14 @@ function render(){
   const choices = document.createElement('div');
   choices.className = 'choices';
 
-  q.options.forEach((opt, i)=>{
+  q.options.forEach((opt, i) => {
     const btn = document.createElement('button');
     btn.textContent = `${'ABCD'[i]}. ${opt}`;
 
     const sel = state.selected[state.idx];
-    if(sel === i) btn.classList.add('selected');
+    if (sel === i) btn.classList.add('selected');
 
-    btn.addEventListener('click', ()=>{
+    btn.addEventListener('click', () => {
       state.selected[state.idx] = i;
       render();
     });
@@ -170,168 +502,129 @@ function render(){
 
   card.appendChild(choices);
   quizEl.appendChild(card);
+
+  // 根據題目切換背景圖（大小與位置由 CSS 控制，不變）
+  const bgPath = BG_MAP[state.idx] || 'assets/01.jpeg';
+  document.body.style.backgroundImage = `url('${bgPath}')`;
+}
+
+function showExplain(idx){
+  const q = QUESTIONS[idx];
+  const text = q.explain;
+  if (!text) return;
+
+  const sel = state.selected[idx];
+  let correctnessHtml = '';
+  if (typeof sel === 'number'){
+    const isCorrect   = sel === q.answer;
+    const selText     = `${'ABCD'[sel]}. ${q.options[sel]}`;
+    const correctText = `${'ABCD'[q.answer]}. ${q.options[q.answer]}`;
+
+    if (isCorrect){
+      correctnessHtml = `
+        <div style="margin-bottom:6px;">
+          ✅ 你的答案：${selText}（正確）
+        </div>
+      `;
+    } else {
+      correctnessHtml = `
+        <div style="margin-bottom:6px;">
+          ❌ 你的答案：${selText}<br>
+          正確答案：${correctText}
+        </div>
+      `;
+    }
+  }
+
+  explainEl.innerHTML = `
+    <div class="explain-card">
+      ${correctnessHtml}
+      <div>${text}</div>
+    </div>
+  `;
+}
+
+function showResultModal(score, maxScore){
+  const percent = Math.round((score / maxScore) * 100);
+
+  resultModal.innerHTML = `
+    <h2>作答結果</h2>
+    <p>得分：<strong>${score} / ${maxScore}</strong></p>
+    <p>正確率：<strong>${percent}%</strong></p>
+    <button id="restartBtn" class="btn" style="margin-top:16px;">再挑戰一次！</button>
+  `;
+
+  overlayEl.style.display = 'flex';
+
+  const restartBtn = document.querySelector('#restartBtn');
+  restartBtn.onclick = () => {
+    overlayEl.style.display = 'none';
+    state.idx = 0;
+    state.score = 0;
+    state.selected = {};
+    state.startAt = Date.now();
+    state.finished = false;
+    state.explainShown = {};
+    explainEl.innerHTML = '';
+    summaryEl.innerHTML = '';
+    render();
+  };
 }
 
 function grade(){
   let score = 0;
-  const details = [];
-  QUESTIONS.forEach((q, i)=>{
+
+  QUESTIONS.forEach((q, i) => {
     const sel = state.selected[i];
-    const correct = sel === q.answer;
-    if(correct) score += POINTS_PER_Q;
-    details.push({
-      q: q.q,
-      selected: typeof sel === 'number' ? `${'ABCD'[sel]}. ${q.options[sel]}` : '(未作答)',
-      answer: `${'ABCD'[q.answer]}. ${q.options[q.answer]}`,
-      correct,
-      explain: q.explain || ''
-    });
+    if (sel === q.answer) {
+      score += POINTS_PER_Q;
+    }
   });
-  state.score = score;
+
+  state.score    = score;
   state.finished = true;
 
   const maxScore = QUESTIONS.length * POINTS_PER_Q;
-  const percent = Math.round(score / maxScore * 100);
-  const used = Math.round((Date.now()-state.startAt)/1000);
-
-  // 成績摘要 + 玩家表單
-  summaryEl.innerHTML = `
-    <div class="result">
-      <strong>成績</strong>：${score} / ${maxScore}（${percent}%）&nbsp;&nbsp;|&nbsp;&nbsp;<strong>花費時間</strong>：${formatTime(used)}
-    </div>
-
-    <div class="card" style="margin-top:12px">
-      <h3 style="margin:0 0 8px">玩家資訊</h3>
-      <form id="playerForm" onsubmit="return false;">
-        <div class="grid">
-          <div>
-            <label>姓名 *</label>
-            <input type="text" id="name" required placeholder="王小明" />
-          </div>
-          <div>
-            <label>公司</label>
-            <input type="text" id="company" placeholder="範例股份有限公司" />
-          </div>
-          <div>
-            <label>電話 *</label>
-            <input type="text" id="phone" required placeholder="09xx-xxx-xxx" />
-          </div>
-          <div>
-            <label>Email *</label>
-            <input type="email" id="email" required placeholder="user@example.com" />
-          </div>
-        </div>
-        <div class="controls" style="margin-top:16px">
-          <button id="savePlayer" class="btn">儲存這位玩家</button>
-          <div style="flex:1"></div>
-          <button id="downloadExcel" class="btn">下載 Excel</button>
-          <button id="downloadCSV" class="btn ghost">下載 CSV</button>
-          <button id="clearAll" class="btn warn">清空本機資料</button>
-        </div>
-        <p class="small">提示：資料僅儲存在這台裝置的瀏覽器（localStorage）。如需雲端蒐集，改用 Google Sheet / 後端 API。</p>
-      </form>
-    </div>
-
-    <div style="margin-top:10px">
-      ${details.map((d,idx)=>`
-        <div class="card" style="background:#0a1a2fcc">
-          <div class="q">第 ${idx+1} 題：${d.q}</div>
-          <div>${d.correct ? '✅ 正確' : '❌ 錯誤'}</div>
-          <div style="margin-top:6px">你的答案：${d.selected}</div>
-          <div>正確答案：${d.answer}</div>
-          ${d.explain ? `<div style="margin-top:6px; color:#a7f3d0">解析：${d.explain}</div>`:''}
-        </div>
-      `).join('')}
-    </div>
-  `;
-
-  // 綁定表單按鈕行為
-  bindFormButtons({score, maxScore, percent, used, details});
-  window.scrollTo({top: document.body.scrollHeight, behavior:'smooth'});
+  showResultModal(score, maxScore);
 }
 
-function bindFormButtons(payload){
-  const f = {
-    name: $('#name'), company: $('#company'), phone: $('#phone'), email: $('#email')
-  };
-  const saveBtn = $('#savePlayer');
-  const excelBtn = $('#downloadExcel');
-  const csvBtn = $('#downloadCSV');
-  const clearBtn = $('#clearAll');
+nextBtn.addEventListener('click', () => {
+  const total = QUESTIONS.length;
+  const idx   = state.idx;
 
-  saveBtn.addEventListener('click', ()=>{
-    // 驗證
-    if(!f.name.value.trim()){ alert('請填寫姓名'); return; }
-    if(!/^[0-9+\-()\s]{6,}$/.test(f.phone.value.trim())){ alert('電話格式不太對'); return; }
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.value.trim())){ alert('Email 格式不太對'); return; }
-
-    const record = {
-      timestamp: new Date().toISOString(),
-      姓名: f.name.value.trim(),
-      公司: f.company.value.trim(),
-      電話: f.phone.value.trim(),
-      Email: f.email.value.trim(),
-      得分: payload.score,
-      總分: payload.maxScore,
-      百分比: payload.percent + '%',
-      花費秒數: payload.used,
-      // 也可存每題作答：
-      作答: payload.details.map((d,i)=>`Q${i+1}:${d.correct?'O':'X'}`).join(' ')
-    };
-
-    const key = 'quiz_records_v1';
-    const all = JSON.parse(localStorage.getItem(key) || '[]');
-    all.push(record);
-    localStorage.setItem(key, JSON.stringify(all));
-    alert('已儲存到本機（localStorage）。可繼續下載 Excel/CSV 或換下一位玩家作答。');
-  });
-
-  excelBtn.addEventListener('click', ()=>{
-    const key = 'quiz_records_v1';
-    const all = JSON.parse(localStorage.getItem(key) || '[]');
-    if(!all.length){ alert('目前沒有已儲存的玩家資料'); return; }
-    const ws = XLSX.utils.json_to_sheet(all);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'records');
-    XLSX.writeFile(wb, 'quiz_records.xlsx');
-  });
-
-  csvBtn.addEventListener('click', ()=>{
-    const key = 'quiz_records_v1';
-    const all = JSON.parse(localStorage.getItem(key) || '[]');
-    if(!all.length){ alert('目前沒有已儲存的玩家資料'); return; }
-    const header = Object.keys(all[0]);
-    const rows = [header.join(',')].concat(all.map(obj=> header.map(h=>`"${String(obj[h]??'').replaceAll('"','""')}"`).join(',')));
-    const blob = new Blob(["\ufeff" + rows.join('\n')], {type:'text/csv;charset=utf-8;'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'quiz_records.csv';
-    a.click();
-  });
-
-  clearBtn.addEventListener('click', ()=>{
-    if(confirm('確定要清空這台裝置上的所有玩家資料？')){
-      localStorage.removeItem('quiz_records_v1');
-      alert('已清空。');
+  if (!state.explainShown[idx] && QUESTIONS[idx].explain){
+    if (typeof state.selected[idx] !== 'number'){
+      alert('請先選擇一個答案喔！');
+      return;
     }
-  });
-}
+    state.explainShown[idx] = true;
+    showExplain(idx);
+    return;
+  }
 
-/********************
- * 4) 事件與初始化
- ********************/
-prevBtn.addEventListener('click', ()=>{ if(state.idx>0){ state.idx--; render(); }});
-nextBtn.addEventListener('click', ()=>{ if(state.idx<QUESTIONS.length-1){ state.idx++; render(); }});
-finishBtn.addEventListener('click', grade);
+  if (idx < total - 1) {
+    state.idx++;
+    render();
+  }
+});
 
-// 計時器
-setInterval(()=>{
-  if(state.finished) return;
-  const sec = (Date.now()-state.startAt)/1000;
-  timerEl.textContent = formatTime(sec);
-}, 1000);
+finishBtn.addEventListener('click', () => {
+  const idx = state.idx;
 
-// 初次繪製
+  if (!state.explainShown[idx] && QUESTIONS[idx].explain){
+    if (typeof state.selected[idx] !== 'number'){
+      alert('請先選擇一個答案喔！');
+      return;
+    }
+    state.explainShown[idx] = true;
+    showExplain(idx);
+    return;
+  }
+
+  grade();
+});
+
+// 初次畫面
 render();
 </script>
 </body>
