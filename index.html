@@ -251,10 +251,11 @@
 
 <script>
 /********************
- * 題庫（第 1 題改為 Car-O-Liner）
+ * 題庫（10 題 Car-O-Liner）
  ********************/
 const QUESTIONS = [
   {
+    // 第 1 題：品牌起源
     q:'Car-O-Liner 創立於哪一年？',
     options:[
       '1963 年',
@@ -266,103 +267,112 @@ const QUESTIONS = [
     explain:'💡 解析：Car-O-Liner 於 1973 年在瑞典創立，並以車身校正平台與測量系統聞名全球。'
   },
   {
-    q:'John Bean 品牌於車輪定位技術中最具代表性的技術之一「3D 影像定位系統」是與哪家公司合作所致？',
+    // 第 2 題：OEM 認證優勢
+    q:'Car-O-Liner 的車身修復與量測設備獲得哪些 OEM 車廠的正式認證？',
     options:[
-      'Bosch',
-      'Snap-on',
-      'Toyota',
-      'Siemens'
-    ],
-    answer:1,
-    explain:'💡 解析：John Bean 與 Snap-on 合作，將機械定位與 3D 影像技術結合，形成全新維修方案，成為業界標準。'
-  },
-  {
-    q:'下列哪項技術是 John Bean 影像定位的創新里程碑？',
-    options:[
-      'Prism 無線影像定位系統',
-      'UltraScan Pro 光譜測距',
-      'LaserLine Smart Aligner',
-      'Twin-Cam V-Align System'
-    ],
-    answer:0,
-    explain:'💡 解析：Prism 系統讓定位更靈活、快速，無需傳輸線與固定結構，是維修效率的代表性技術。'
-  },
-  {
-    q:'John Bean 的 Tru-Point™ 系統主要用於哪一項應用？',
-    options:[
-      '輪胎氣壓偵測',
-      '車身烤漆溫度控制',
-      'ADAS 先進駕駛輔助系統校正',
-      '冷媒壓縮比測試'
-    ],
-    answer:2,
-    explain:'解析：Tru-Point™ 可自動校正攝影機、雷達與感測器，讓定位與安全輔助系統同步一致。'
-  },
-  {
-    q:'John Bean 為何與 WorldSkills International 建立合作夥伴關係？',
-    options:[
-      '推廣零售銷售',
-      '支援全球青年技能競賽，提供定位與 ADAS 設備',
-      '協助舉辦汽車設計比賽',
-      '供應活動舞台搭建'
-    ],
-    answer:1,
-    explain:'💡 解析：自 2023 年起，John Bean 成為 WorldSkills 全球產業夥伴，協助培育新世代維修技術人才。'
-  },
-  {
-    q:'John Bean 最新推出的 V4400 Commander 定位機具備下列哪些主要功能？',
-    options:[
-      '採用 XD 高解析相機與 3D 即時影像追蹤',
-      '無靶標（Targetless）設計與 Drive-Through 連續量測功能',
-      '整合 ADAS 校正與 Audit Mode 維修報告匯出系統',
+      'Porsche',
+      'Mercedes-Benz',
+      'BMW',
       '以上皆是'
     ],
     answer:3,
-    explain:'💡 解析：V4400 Commander 為 John Bean 最新旗艦 wheel aligner，結合 XD 相機與 3D 即時影像追蹤、無靶標設計、Drive-Through 功能與 ADAS 校正支援，讓定位作業更快速精準。'
+    explain:'💡 解析：Car-O-Liner 的校正平台、EVO 夾具與 Point X 量測系統均獲得 Porsche、Mercedes-Benz 與 BMW 等高端車廠的原廠認證，為全球維修網絡指定使用設備。'
   },
   {
-    q:'在被 Snap-on 收購之前，John Bean 的汽車維修設備部門曾隸屬於哪家公司？',
+    // 第 3 題：技術領先案例
+    q:'POINT X II 是 Car-O-Liner 的哪一類設備？',
     options:[
-      'FMC Corporation（Food Machinery & Chemical）',
-      'General Motors',
-      'Bosch Technology Group',
-      'Siemens AG'
+      '引擎診斷儀',
+      '輪胎平衡機',
+      '車身／車架精準量測工具',
+      '舉升機系統'
     ],
-    answer:0,
-    explain:'💡 解析：John Bean 的前身為 Bean Spray Pump，後併入 FMC Corporation，其汽車維修設備部門於 1996 年被 Snap-on 收購。'
+    answer:2,
+    explain:'💡 解析：POINT X II 是 Car-O-Liner 的旗艦測量系統，利用碳纖維測臂與藍牙傳輸，快速且高精度地測量車架結構。'
   },
   {
-    q:'John Bean 影像定位系統的發展方向，最重視哪個核心目標？',
+    // 第 4 題：高階平台系列
+    q:'Car-O-Liner 的「BenchRack™ 5500」是下列哪種設備？',
     options:[
-      '視覺化、快速化、精準化',
-      '低成本、簡化功能',
-      '擴充娛樂功能',
-      '專注豪華車改裝'
+      '車輪定位機',
+      '輪胎拆裝機',
+      '車身校正／直線拉伸平台',
+      '車身噴漆烘乾設備'
     ],
-    answer:0,
-    explain:'💡 解析：從 Visualiner 到 3D 系統，John Bean 致力於讓定位過程更直觀、更高速且更精準。'
+    answer:2,
+    explain:'💡 解析：BenchRack™ 5500 是 Car-O-Liner 的核心產品，結合液壓直線拉伸與夾具模組，支援 OEM 認證維修流程。'
   },
   {
-    q:'John Bean 成為 WorldSkills International 全球產業夥伴，其目的之一為何？',
+    // 第 5 題：技能賽合作
+    q:'Car-O-Liner 與 WorldSkills International 的合作關係是什麼？',
     options:[
       '提供比賽用輪胎免費配給',
-      '為汽車技術競賽提供輪定位與校正設備',
+      '為汽車車體與車身維修競賽提供設備支援，並成為全球產業夥伴',
       '贊助參賽者旅遊觀光',
-      '提供比賽用餐點與會場裝潢'
+      '提供比賽用餐點與會場裝潢服務'
     ],
     answer:1,
-    explain:'💡 解析：John Bean 在 WorldSkills 中的角色為汽車技術領域設備合作夥伴，提供專業裝備以支持青年技能人才競賽。'
+    explain:'💡 解析：Car-O-Liner 自 2009 年起支援 WorldSkills 賽事，並於 2018 年成為全球產業夥伴，致力於培育專業維修人才。'
   },
   {
-    q:'下列哪一句最能代表 John Bean 的品牌核心？',
+    // 第 6 題：專利／創新技術
+    q:'Car-O-Liner 的「EVO™ Universal Fixture Kit」系統主要用於何種用途？',
     options:[
-      '速度勝於一切',
-      '精準 × 創新 × 可靠',
-      '修車變簡單',
-      '每個螺絲都值得敬重'
+      '汽車音響及內裝安裝',
+      '車身固定夾具與錨固系統，支援車體校正作業',
+      '輪胎拆裝機精準控制模組',
+      '車內通訊及無線診斷平台'
     ],
     answer:1,
-    explain:'💡 解析：John Bean 以精準測量、創新科技與可靠品質聞名全球，是專業維修設備的代名詞。'
+    explain:'💡 解析：EVO™ 系列為 Car-O-Liner 的專利模組化夾具系統，可適配多車型並提升修復精度。'
+  },
+  {
+    // 第 7 題：Car-O-Tronic 技術
+    q:'Car-O-Liner 的 Car-O-Tronic Vision2 系統主要功能是？',
+    options:[
+      '自動偵測車輪平衡狀態',
+      '實時監控車身修復過程並與資料庫比對',
+      '車輛電子控制模組維修',
+      '自動噴漆厚度測量'
+    ],
+    answer:1,
+    explain:'💡 解析：Car-O-Tronic Vision2 系統能同步測量數據與 OEM 車體基準資料庫連動，確保修復精度。'
+  },
+  {
+    // 第 8 題：品牌定位與技術目標
+    q:'Car-O-Liner 的技術發展重點包括哪三項？',
+    options:[
+      '價格最低、外觀最炫、操作最簡單',
+      '精密量測、車體校正、效率提升',
+      '僅供改裝車、走潮流路線、主要針對消費者市場',
+      '傳統錘打技術、手工校直、少用數據分析'
+    ],
+    answer:1,
+    explain:'💡 解析：品牌致力於以高精度測量與校正系統，提升修復效率與安全標準。'
+  },
+  {
+    // 第 9 題：全球認證優勢
+    q:'Car-O-Liner 的設備已獲得下列哪類 OEM 認證？',
+    options:[
+      '僅限亞洲地區 OEM',
+      '多家全球汽車品牌的 OEM 認證，如 BMW、Volvo、Mercedes-Benz',
+      '僅限電動車品牌',
+      '尚未獲得任何 OEM 認證'
+    ],
+    answer:1,
+    explain:'💡 解析：Car-O-Liner 的校正平台與測量系統獲多家車廠認可，確保修復作業符合原廠標準。'
+  },
+  {
+    // 第 10 題：品牌口號與願景
+    q:'下列哪一句最能代表 Car-O-Liner 的品牌口號？',
+    options:[
+      '工具無所不在',
+      '改裝由我領航',
+      'Precision for Collision',
+      '速修先決'
+    ],
+    answer:2,
+    explain:'💡 解析：此口號體現 Car-O-Liner 專注於車身碰撞修復，以「精準」作為品牌的核心承諾與願景。'
   }
 ];
 
@@ -416,6 +426,7 @@ function render(){
   const card = document.createElement('div');
   card.className = 'card';
 
+  // 題目前的紅色小標題
   if (state.idx === 0){
     const t = document.createElement('div');
     t.className = 'section-title';
@@ -425,55 +436,55 @@ function render(){
   if (state.idx === 1){
     const t = document.createElement('div');
     t.className = 'section-title';
-    t.textContent = '2️⃣ 3D 影像定位夥伴';
+    t.textContent = '2️⃣ OEM 認證優勢';
     card.appendChild(t);
   }
   if (state.idx === 2){
     const t = document.createElement('div');
     t.className = 'section-title';
-    t.textContent = '3️⃣ Prism 無線影像定位';
+    t.textContent = '3️⃣ 技術領先案例';
     card.appendChild(t);
   }
   if (state.idx === 3){
     const t = document.createElement('div');
     t.className = 'section-title';
-    t.textContent = '4️⃣ 智慧校正代表作';
+    t.textContent = '4️⃣ 高階平台系列';
     card.appendChild(t);
   }
   if (state.idx === 4){
     const t = document.createElement('div');
     t.className = 'section-title';
-    t.textContent = '5️⃣ WorldSkills 全球合作';
+    t.textContent = '5️⃣ 技能賽合作';
     card.appendChild(t);
   }
   if (state.idx === 5){
     const t = document.createElement('div');
     t.className = 'section-title';
-    t.textContent = '6️⃣ V4400 最新款定位機';
+    t.textContent = '6️⃣ 專利／創新技術';
     card.appendChild(t);
   }
   if (state.idx === 6){
     const t = document.createElement('div');
     t.className = 'section-title';
-    t.textContent = '7️⃣ 品牌歷史傳承';
+    t.textContent = '7️⃣ Car-O-Tronic 技術';
     card.appendChild(t);
   }
   if (state.idx === 7){
     const t = document.createElement('div');
     t.className = 'section-title';
-    t.textContent = '8️⃣ 光學影像演進';
+    t.textContent = '8️⃣ 品牌定位與技術目標';
     card.appendChild(t);
   }
   if (state.idx === 8){
     const t = document.createElement('div');
     t.className = 'section-title';
-    t.textContent = '9️⃣ 技術教育貢獻';
+    t.textContent = '9️⃣ 全球認證優勢';
     card.appendChild(t);
   }
   if (state.idx === 9){
     const t = document.createElement('div');
     t.className = 'section-title';
-    t.textContent = '🔟 品牌精神';
+    t.textContent = '🔟 品牌口號與願景';
     card.appendChild(t);
   }
 
